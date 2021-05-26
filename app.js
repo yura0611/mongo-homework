@@ -9,6 +9,7 @@ run()
 
 async function run() {
   await connection.connect()
+  await connection.get().createCollection('users')
   await connection.get().dropCollection('users')
   userCollection = connection.get().collection('users')
 
