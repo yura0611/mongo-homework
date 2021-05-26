@@ -24,9 +24,11 @@ async function run() {
 
 // - Create 2 users per department (a, b, c)
 async function example1() {
-
+  const departments = ['a', 'a', 'b', 'b', 'c', 'c']
+  const users = departments.map(d => ({department: d})).map(mapUser)
   try {
-
+    const {result} = await userCollection.insertMany(users)
+    console.log(`Added ${result.n} users`)
   } catch (err) {
     console.error(err)
   }
@@ -36,7 +38,8 @@ async function example1() {
 
 async function example2() {
   try {
-
+    const {result} = await userCollection.deleteOne({department: 'a'})
+    console.log(`Removed ${result.n} user`)
   } catch (err) {
     console.error(err)
   }
@@ -46,7 +49,16 @@ async function example2() {
 
 async function example3() {
   try {
-
+    // const [find, update] = [{department: 'b'}, {$set: {firstName: getRandomFirstName()}}]
+    const usersB = await userCollection.find({department: 'b'}).toArray()
+    const bulkWrite = usersB.map(user => ({
+      updateOne: {
+        filter: {_id: user._id},
+        update: {$set: {firstName: getRandomFirstName()}}
+      }
+    }))
+    const {result} = await userCollection.bulkWrite(bulkWrite)
+    console.log(`Updated ${result.nModified} users`)
   } catch (err) {
     console.error(err)
   }
@@ -55,7 +67,10 @@ async function example3() {
 // - Find all users from department (c)
 async function example4() {
   try {
-
+    const [find, projection] = [{department: 'c'}, {firstName: 1}]
+    const users = [...(await userCollection.find(find, projection).toArray())].map(mapUser)
+    console.log('Users:')
+    users.forEach(console.log)
   } catch (err) {
     console.error(err)
   }
