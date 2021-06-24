@@ -10,7 +10,7 @@
     "debug": true
   },
   "local": {
-    "database": "mongodb+srv://tech_magic:YuRa0611@techmagic.resia.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "database": "mongodb+srv://tech_magic:<password>@techmagic.resia.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     "dbName": "tc",
     "seed": true,
     "dbConfig": {
